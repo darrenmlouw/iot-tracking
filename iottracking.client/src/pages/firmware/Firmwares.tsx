@@ -88,7 +88,7 @@ const Firmwares = () => {
 
 	async function deleteFirmware(id: number) {
 		const response = await fetch(
-			`https://localhost:7253/api/Firmware/Delete/${id}`,
+			`/api/Firmware/Delete/${id}`,
 			{
 				method: 'DELETE',
 				headers: {

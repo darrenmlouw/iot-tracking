@@ -135,7 +135,7 @@ const Groups = () => {
 
 	async function deleteGroup(id: number) {
 		const response = await fetch(
-			`https://localhost:7253/api/Groups/Delete/${id}`,
+			`/api/Groups/Delete/${id}`,
 			{
 				method: 'DELETE',
 				headers: {
@@ -145,41 +145,6 @@ const Groups = () => {
 		);
 		return response.ok;
 	}
-
-	// function organizeGroups(groups: Group[]) {
-	// 	// Create a map to hold groups by their ID for quick access
-	// 	const groupMap = new Map(
-	// 		groups.map((group) => [group.id, { ...group, children: [] }])
-	// 	);
-
-	// 	// Placeholder for root groups
-	// 	const rootGroups: Group[] = [];
-
-	// 	// Populate children array and identify root groups
-	// 	groupMap.forEach((group) => {
-	// 		if (group.parentGroupId) {
-	// 			const parent = groupMap.get(group.parentGroupId);
-	// 			parent.children.push(group);
-	// 		} else {
-	// 			rootGroups.push(group);
-	// 		}
-	// 	});
-
-	// 	return rootGroups;
-	// }
-
-	// function renderGroupsWithSubgroups(groupList: Group[]) {
-	// 	return groupList.map((group) => (
-	// 		<SelectGroup key={group.id}>
-	// 			<SelectLabel>{group.name}</SelectLabel>
-	// 			{group.children.length > 0 ? (
-	// 				renderGroupsWithSubgroups(group.children)
-	// 			) : (
-	// 				<SelectItem value={group.id.toString()}>{group.name}</SelectItem>
-	// 			)}
-	// 		</SelectGroup>
-	// 	));
-	// }
 
 	return (
 		<>

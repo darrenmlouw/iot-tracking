@@ -5,6 +5,7 @@ Digital Matter Interview Assessment
 ## Prerequisites
 
 Before you begin, ensure you have installed the following:
+- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) with the ASP.NET and web development workload
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later
 - [Node.js](https://nodejs.org/) (LTS version recommended)
 - [Git](https://git-scm.com/downloads)
@@ -26,45 +27,21 @@ To get started, clone the repository to your local machine:
 git clone https://github.com/darrenmlouw/IoTTracking.git
 ```
 
-## Frontend React Setup
-after cloning the repository, navigate to the iottracking.client directory.
+## Opening the Solution in Visual Studio
+Open the cloned repository in Visual Studio. Double-click on the IoTTracking.sln solution file to open it.
 
+### Configure Startup Projects
+- Right-click on the Solution in the Solution Explorer.
+- Choose 'Set StartUp Projects...'
+- Select 'Multiple startup projects'.
+- Set action to 'Start' for both IoTTracking.Server and iottracking.client projects.
+ -Click OK.
 
-### Naivgating to the iottracking.client Project Directory
-```bash
-cd IotTracking/iottracking.client
-```
-
-### Install Node Dependencies
-```bash
-npm install
-```
-
-## Backend API Setup
-### Navigate back to the IoTTracking Directory
-```bash
-cd ..
-```
-
-### Naivgating to the IoTTracking.Server Project Directory
-```bash
-cd IoTTracking.Server
-```
-
-### Restore Dependencies
-```bash
-dotnet restore
-```
-
-### Build the Project for Development
-```bash
-dotnet build --configuration Debug
-```
-
-### Apply Migrations
+### Apply Migrations (CMDF or Package Manager Console) - Please look further down for package manager console instructions
+#### Using the terminal, navigate to the IoTTracking.Infrastructure directory and apply the migrations.
 Navigate back to the root directory (IoTTracking)
 ```bash
-cd ..
+cd IoTTracking
 ```
 
 Nagivate to the IoTTracking.Infrastructre directory
@@ -77,20 +54,21 @@ Apply the migrations
 set ASPNETCORE_ENVIRONMENT=Development
 dotnet ef database update --project ../IoTTracking.Infrastructure
 ```
+
+#### Using package manager console in Visual Studio
+- Open the package manager console in Visual Studio.
+- Set the Default Project to `IoTTracking.Infrastructure`.
+- Run the following command to apply the migrations:
+```bash
+Update-Database -Args 'Development'
+```
+
 After this step, please ensure that a database named `IoTTrackingDev` has been created and the tables have been created and seeded with data.
 
 If for some reason you cannot apply the migrations, you can run the SQL scripts provided below. After manually creating the database 'IoTTrackingDev', you can run the SQL scripts below to create the tables and seed the data.
 
-### Navigate back to the IoTTracking.Server Project Directory
-```bash
-cd ../IoTTracking.Server
-```
-
-### Run the API Server
-```bash
-set ASPNETCORE_ENVIRONMENT=Development
-dotnet run
-```
+### Running the Application
+- Press F5 to run the application. This will start the API server and the React frontend.
 
 The API server should now be running on `http://localhost:5154`.
 and the React frontend should be running on `https://localhost:5173`.
@@ -103,9 +81,7 @@ npm run dev
 
 ### Swagger Documentation
 There is proxy setup for the frontend to communicate with the backend API. The proxy is configured to use the API server running on `http://localhost:5154`.
-To access the swagger documentation, navigate to `http://localhost:5154/swagger`.
-
-
+To access the swagger documentation, navigate to `http://localhost:5154/swagger`. or `https://localhost:7253/swagger` for the frontend proxy.
 
 ## SQL Scripts
 Create a Database named `IoTTrackingDev` and run the following SQL scripts to create the tables and seed the data.
