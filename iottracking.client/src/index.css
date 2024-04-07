@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 230 25% 20%;
+
+    --card: 210 15% 95%;
+    --card-foreground: 230 25% 20%;
+
+    --popover: 210 10% 100%;
+    --popover-foreground: 230 25% 20%;
+
+    --primary: 260 20% 80%;
+    --primary-foreground: 260 25% 20%;
+
+    --secondary: 120 30% 90%;
+    --secondary-foreground: 120 30% 20%;
+
+    --muted: 30 20% 80%;
+    --muted-foreground: 30 25% 20%;
+
+    --accent: 340 30% 90%;
+    --accent-foreground: 340 30% 20%;
+
+    --destructive: 0 45% 85%;
+    --destructive-foreground: 0 50% 20%;
+
+    --border: 210 20% 86%;
+    --input: 210 15% 95%;
+    --ring: 230 25% 80%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 210 20% 15%;
+    --foreground: 210 10% 90%;
+
+    --card: 210 25% 20%;
+    --card-foreground: 210 10% 90%;
+
+    --popover: 210 30% 25%;
+    --popover-foreground: 210 10% 90%;
+
+    --primary: 260 20% 50%;
+    --primary-foreground: 260 10% 90%;
+
+    --secondary: 120 30% 40%;
+    --secondary-foreground: 120 10% 90%;
+
+    --muted: 30 20% 50%;
+    --muted-foreground: 30 10% 90%;
+
+    --accent: 340 30% 40%;
+    --accent-foreground: 340 10% 90%;
+
+    --destructive: 0 45% 45%;
+    --destructive-foreground: 0 50% 90%;
+
+    --border: 210 30% 25%;
+    --input: 210 25% 20%;
+    --ring: 230 25% 50%;
+  }
+}
+
+html,
+body,
+#root,
+.App,
+.content {
+	height: 100vh;
+	width: 100vw;
+	font-family: 'Open Sans', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
