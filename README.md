@@ -28,7 +28,7 @@ git clone https://github.com/darrenmlouw/IoTTracking.git
 ```
 
 ## Opening the Solution in Visual Studio
-Open the cloned repository in Visual Studio 2022. Double-click on the IoTTracking.sln solution file to open it.
+Open the cloned repository in Visual Studio 2022 as Administrator. Double-click on the IoTTracking.sln solution file to open it.
 
 ### Configure Startup Projects
 - Right-click on the Solution in the Solution Explorer.
