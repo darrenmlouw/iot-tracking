@@ -3,15 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTTracking.Server", "IoTTracking.Server\IoTTracking.Server.csproj", "{1134F47A-5862-4F90-8E4A-63681C6AA991}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTTracking.Server", "IoTTracking.Server\IoTTracking.Server.csproj", "{1134F47A-5862-4F90-8E4A-63681C6AA991}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "iottracking.client", "iottracking.client\iottracking.client.esproj", "{971DD842-DF77-4789-8365-4D342B461AE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTTracking.Core", "IoTTracking.Core\IoTTracking.Core.csproj", "{B0019940-6DAD-4D78-AF74-20A7646AC377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTTracking.Core", "IoTTracking.Core\IoTTracking.Core.csproj", "{B0019940-6DAD-4D78-AF74-20A7646AC377}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTTracking.Infrastructure", "IoTTracking.Infrastructure\IoTTracking.Infrastructure.csproj", "{4D36767B-19DC-4EF0-A736-1A95457C687D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTTracking.Infrastructure", "IoTTracking.Infrastructure\IoTTracking.Infrastructure.csproj", "{4D36767B-19DC-4EF0-A736-1A95457C687D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoTTracking.Application", "IoTTracking.Application\IoTTracking.Application.csproj", "{04684431-201D-4FFB-90C3-074A644049E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTTracking.Application", "IoTTracking.Application\IoTTracking.Application.csproj", "{04684431-201D-4FFB-90C3-074A644049E1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{77F5A76F-687A-4765-A87D-7A9AF15C277F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		OutputScript.sql = OutputScript.sql
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

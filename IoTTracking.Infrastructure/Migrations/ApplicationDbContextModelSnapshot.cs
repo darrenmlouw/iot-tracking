@@ -46,7 +46,7 @@ namespace IoTTracking.Infrastructure.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Devices", (string)null);
+                    b.ToTable("Devices");
 
                     b.HasData(
                         new
@@ -118,7 +118,7 @@ namespace IoTTracking.Infrastructure.Migrations
                     b.HasIndex("Version")
                         .IsUnique();
 
-                    b.ToTable("Firmwares", (string)null);
+                    b.ToTable("Firmwares");
 
                     b.HasData(
                         new
@@ -158,7 +158,7 @@ namespace IoTTracking.Infrastructure.Migrations
 
                     b.HasIndex("ParentGroupId");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
 
                     b.HasData(
                         new
