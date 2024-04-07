@@ -26,7 +26,26 @@ To get started, clone the repository to your local machine:
 git clone https://github.com/darrenmlouw/IoTTracking.git
 ```
 
+## Frontend React Setup
+after cloning the repository, navigate to the iottracking.client directory.
+
+
+### Naivgating to the iottracking.client Project Directory
+```bash
+cd IotTracking/iottracking.client
+```
+
+### Install Node Dependencies
+```bash
+npm install
+```
+
 ## Backend API Setup
+### Navigate back to the IoTTracking Directory
+```bash
+cd ..
+```
+
 ### Naivgating to the IoTTracking.Server Project Directory
 ```bash
 cd IoTTracking.Server
@@ -43,6 +62,11 @@ dotnet build --configuration Debug
 ```
 
 ### Apply Migrations
+Navigate back to the root directory (IoTTracking)
+```bash
+cd ..
+```
+
 Nagivate to the IoTTracking.Infrastructre directory
 ```bash
 cd IoTTracking.Infrastructure
@@ -53,29 +77,35 @@ Apply the migrations
 set ASPNETCORE_ENVIRONMENT=Development
 dotnet ef database update --project ../IoTTracking.Infrastructure
 ```
+After this step, please ensure that a database named `IoTTrackingDev` has been created and the tables have been created and seeded with data.
 
-If for some reason you cannot apply the migrations, you can run the SQL scripts provided below.
+If for some reason you cannot apply the migrations, you can run the SQL scripts provided below. After manually creating the database 'IoTTrackingDev', you can run the SQL scripts below to create the tables and seed the data.
+
+### Navigate back to the IoTTracking.Server Project Directory
+```bash
+cd ../IoTTracking.Server
+```
 
 ### Run the API Server
 ```bash
+set ASPNETCORE_ENVIRONMENT=Development
 dotnet run
 ```
 
-## Frontend React Setup
-### Naivgating to the iottracking.client Project Directory
-```bash
-cd iottracking.client
-```
+The API server should now be running on `http://localhost:5154`.
+and the React frontend should be running on `https://localhost:5173`.
+The Windows will not open automatically, you will need to open the browser and navigate to the URLs.
 
-### Install Dependencies
-```bash
-npm install
-```
-
-### Run the React App
+If the Frontend is not working, you can run the following command from iottracking.client to start the frontend server.
 ```bash
 npm run dev
 ```
+
+### Swagger Documentation
+There is proxy setup for the frontend to communicate with the backend API. The proxy is configured to use the API server running on `http://localhost:5154`.
+To access the swagger documentation, navigate to `http://localhost:5154/swagger`.
+
+
 
 ## SQL Scripts
 Create a Database named `IoTTrackingDev` and run the following SQL scripts to create the tables and seed the data.
