@@ -5,16 +5,10 @@ using System.Linq.Expressions;
 
 namespace IoTTracking.Infrastructure.GenericRepository
 {
-	public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
+	public abstract class Repository<TEntity>(ApplicationDbContext appDbContext, params Expression<Func<TEntity, object>>[] includes) : IRepository<TEntity> where TEntity : class, IEntity
 	{
-		protected readonly ApplicationDbContext _appDbContext;
-		private readonly Expression<Func<TEntity, object>>[] _includes;
-
-		public Repository(ApplicationDbContext appDbContext, params Expression<Func<TEntity, object>>[] includes)
-		{
-			_appDbContext = appDbContext;
-			_includes = includes;
-		}
+		protected readonly ApplicationDbContext _appDbContext = appDbContext;
+		private readonly Expression<Func<TEntity, object>>[] _includes = includes;
 
 		public IQueryable<TEntity> GetQueryWithIncludesAsTracking(params Expression<Func<TEntity, object>>[] includes)
 		{
@@ -62,14 +56,14 @@ namespace IoTTracking.Infrastructure.GenericRepository
 
 		public virtual TEntity Add(TEntity entity)
 		{
-			if (entity == null) throw new ArgumentNullException(nameof(entity));
+			ArgumentNullException.ThrowIfNull(entity);
 			_appDbContext.Set<TEntity>().Add(entity);
 			return entity;
 		}
 
 		public virtual async Task<TEntity> AddAsync(TEntity entity)
 		{
-			if (entity == null) throw new ArgumentNullException(nameof(entity));
+			ArgumentNullException.ThrowIfNull(entity);
 			await _appDbContext.Set<TEntity>().AddAsync(entity);
 			return entity;
 		}
@@ -81,12 +75,13 @@ namespace IoTTracking.Infrastructure.GenericRepository
 
 		public virtual TEntity Update(TEntity entity)
 		{
-			if (entity == null) throw new ArgumentNullException(nameof(entity));
+			ArgumentNullException.ThrowIfNull(entity);
+
 			_appDbContext.Set<TEntity>().Update(entity);
 			return entity;
 		}
 
-		public virtual TEntity SetEntityNoTracking(TEntity entity)
+		public virtual TEntity? SetEntityNoTracking(TEntity entity)
 		{
 			return _appDbContext.Set<TEntity>().AsNoTracking().FirstOrDefault(e => e.Id == entity.Id);
 		}

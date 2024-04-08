@@ -6,23 +6,18 @@ namespace IoTTracking.Server.GenericController
 {
 	[ApiController]
     [Route("api/[controller]")]
-    public abstract class BaseController<TEntity, TDto> : ControllerBase, IBaseController<TEntity, TDto>
+    public abstract class BaseController<TEntity, TDto>(IService<TEntity, TDto> logic) : ControllerBase, IBaseController<TEntity, TDto>
         where TDto : class
         where TEntity : class
     {
-        protected readonly IService<TEntity, TDto> _logic;
+        protected readonly IService<TEntity, TDto> _logic = logic;
 
-        public BaseController(IService<TEntity, TDto> logic)
-        {
-            _logic = logic;
-        }
-
-        /// <summary>
-        /// Gets the {Entity} by ID.
-        /// </summary>
-        /// <param name="id">The ID of the {Entity}.</param>
-        /// <returns>The {Entity} with the specified ID.</returns>
-        [HttpGet("Get/{id}")]
+		/// <summary>
+		/// Gets the {Entity} by ID.
+		/// </summary>
+		/// <param name="id">The ID of the {Entity}.</param>
+		/// <returns>The {Entity} with the specified ID.</returns>
+		[HttpGet("Get/{id}")]
         public virtual async Task<IActionResult> GetById(int id)
         {
             var entity = await _logic.GetById(id);
@@ -34,9 +29,9 @@ namespace IoTTracking.Server.GenericController
         /// </summary>
         /// <returns>A collection of {Entities}.</returns>
         [HttpGet("GetAll")]
-        public virtual async Task<IActionResult> GetAll()
+        public virtual IActionResult GetAll()
         {
-            var data = await _logic.GetAll();
+            var data = _logic.GetAll();
             return Ok(data);
         }
 

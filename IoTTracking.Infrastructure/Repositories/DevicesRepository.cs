@@ -5,15 +5,8 @@ using System.Linq.Expressions;
 
 namespace IoTTracking.Infrastructure.Repositories
 {
-	public class DevicesRepository : Repository<Devices>, IDevicesRepository
+	public class DevicesRepository(ApplicationDbContext dbContext) : Repository<Devices>(dbContext, includes), IDevicesRepository
 	{
-		private static readonly Expression<Func<Devices, object>>[] includes =
-		{
-		};
-
-		public DevicesRepository(ApplicationDbContext dbContext) : base(dbContext, includes)
-		{
-			
-		}
+		private static readonly Expression<Func<Devices, object>>[] includes = [];
 	}
 }

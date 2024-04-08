@@ -7,17 +7,13 @@ using IoTTracking.Core.Entities;
 
 namespace IoTTracking.Application.Services
 {
-	public class DevicesLogic : Service<Devices, DevicesDTO>, IDevicesLogic
+	public class DevicesLogic(
+		IDevicesRepository repository,
+		IUnitOfWork unitOfWork,
+		IMapper mapper) : Service<Devices, DevicesDTO>(repository, unitOfWork, mapper), IDevicesLogic
 	{
-		private readonly IDevicesRepository _devicesRepository;
+		private readonly IDevicesRepository _devicesRepository = repository;
 
-		public DevicesLogic(
-			IDevicesRepository repository,
-			IUnitOfWork unitOfWork,
-			IMapper mapper) : base(repository, unitOfWork, mapper)
-		{
-			_devicesRepository = repository;
-		}
 		protected override List<DevicesDTO> EntityToDTO(List<Devices> entities)
 		{
 			return base.EntityToDTO(entities);

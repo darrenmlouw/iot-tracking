@@ -1,23 +1,16 @@
-﻿using IoTTracking.Core.Entities; // Adjust the namespace based on your actual project structure
+﻿using IoTTracking.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
 	public DbSet<Devices> Devices { get; set; }
 	public DbSet<Firmware> Firmwares { get; set; }
 	public DbSet<Groups> Groups { get; set; }
 
-	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-	: base(options)
-	{
-		
-	}
-
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
 
-		// Define relationships
 		modelBuilder.Entity<Devices>()
 			.HasOne(d => d.Firmware)
 			.WithMany(f => f.Devices)

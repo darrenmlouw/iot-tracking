@@ -5,13 +5,8 @@ using IoTTracking.Server.GenericController;
 
 namespace IoTTracking.Server.Controllers
 {
-    public class FirmwareController : BaseController<Firmware, FirmwareDTO>
+	public class FirmwareController(IFirmwareLogic firmwareLogic) : BaseController<Firmware, FirmwareDTO>(firmwareLogic)
 	{
-		private readonly IFirmwareLogic _firmwareLogic;
-
-		public FirmwareController(IFirmwareLogic firmwareLogic) : base(firmwareLogic)
-		{
-			_firmwareLogic = firmwareLogic;
-		}
+		private readonly IFirmwareLogic _firmwareLogic = firmwareLogic;
 	}
 }

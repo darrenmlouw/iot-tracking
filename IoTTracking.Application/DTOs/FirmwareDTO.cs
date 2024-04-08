@@ -8,6 +8,5 @@ namespace IoTTracking.Application.DTOs
 		[Range(1, int.MaxValue)]
 		public int? Id { get; set; }
 		public string? Version { get; set; }
-		//public List<DevicesDTO>? Devices { get; set; }
 	}
 }

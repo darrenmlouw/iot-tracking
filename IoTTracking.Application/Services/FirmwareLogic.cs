@@ -7,17 +7,13 @@ using IoTTracking.Core.Entities;
 
 namespace IoTTracking.Application.Services
 {
-	public class FirmwareLogic : Service<Firmware, FirmwareDTO>, IFirmwareLogic
+	public class FirmwareLogic(
+		IFirmwareRepository repository,
+		IUnitOfWork unitOfWork,
+		IMapper mapper) : Service<Firmware, FirmwareDTO>(repository, unitOfWork, mapper), IFirmwareLogic
 	{
-		private readonly IFirmwareRepository _firmwareRepository;
+		private readonly IFirmwareRepository _firmwareRepository = repository;
 
-		public FirmwareLogic(
-			IFirmwareRepository repository,
-			IUnitOfWork unitOfWork,
-			IMapper mapper) : base(repository, unitOfWork, mapper)
-		{
-			_firmwareRepository = repository;
-		}
 		protected override List<FirmwareDTO> EntityToDTO(List<Firmware> entities)
 		{
 			return base.EntityToDTO(entities);

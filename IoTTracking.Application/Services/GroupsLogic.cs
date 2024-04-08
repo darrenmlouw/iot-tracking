@@ -7,17 +7,13 @@ using IoTTracking.Core.Entities;
 
 namespace IoTTracking.Application.Services
 {
-	public class GroupsLogic : Service<Groups, GroupsDTO>, IGroupsLogic
+	public class GroupsLogic(
+		IGroupsRepository repository,
+		IUnitOfWork unitOfWork,
+		IMapper mapper) : Service<Groups, GroupsDTO>(repository, unitOfWork, mapper), IGroupsLogic
 	{
-		private readonly IGroupsRepository _groupsRepository;
+		private readonly IGroupsRepository _groupsRepository = repository;
 
-		public GroupsLogic(
-			IGroupsRepository repository,
-			IUnitOfWork unitOfWork,
-			IMapper mapper) : base(repository, unitOfWork, mapper)
-		{
-			_groupsRepository = repository;
-		}
 		protected override List<GroupsDTO> EntityToDTO(List<Groups> entities)
 		{
 			return base.EntityToDTO(entities);

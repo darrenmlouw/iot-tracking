@@ -5,13 +5,8 @@ using IoTTracking.Server.GenericController;
 
 namespace IoTTracking.Server.Controllers
 {
-	public class DevicesController : BaseController<Devices, DevicesDTO>
+	public class DevicesController(IDevicesLogic devicesLogic) : BaseController<Devices, DevicesDTO>(devicesLogic)
     {
-        private readonly IDevicesLogic _devicesLogic;
-
-        public DevicesController(IDevicesLogic devicesLogic) : base(devicesLogic)
-        {
-            _devicesLogic = devicesLogic;
-        }
-    }
+        private readonly IDevicesLogic _devicesLogic = devicesLogic;
+	}
 }

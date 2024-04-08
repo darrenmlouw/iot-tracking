@@ -12,8 +12,7 @@ namespace IoTTracking.Core.Entities
 		public int Id { get; set; }
 
 		[Column(TypeName = "VARCHAR(255)")]
-		[RegularExpression(@"^v\d+\.\d+\.\d+$")]
 		public string Version { get; set; } = null!;
-		public ICollection<Devices> Devices { get; set; } = new List<Devices>();
+		public ICollection<Devices> Devices { get; set; } = [];
 	}
 }

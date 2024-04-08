@@ -3,17 +3,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace IoTTracking.Infrastructure.UnitWork
 {
-	public class UnitOfWork : IUnitOfWork
+	public class UnitOfWork(ApplicationDbContext appDbContext) : IUnitOfWork
 	{
-		private readonly ApplicationDbContext _appDbContext;
+		private readonly ApplicationDbContext _appDbContext = appDbContext;
 		private IDbContextTransaction? _currentTransaction;
-		private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
+		private readonly Dictionary<Type, object> _repositories = [];
 		private bool disposedValue;
-
-		public UnitOfWork(ApplicationDbContext appDbContext)
-		{
-			_appDbContext = appDbContext;
-		}
 
 		public async Task BeginTransactionAsync()
 		{
@@ -59,10 +54,7 @@ namespace IoTTracking.Infrastructure.UnitWork
 				{
 					_appDbContext.Dispose();
 
-					if (_currentTransaction != null)
-					{
-						_currentTransaction.Dispose();
-					}
+					_currentTransaction?.Dispose();
 
 					foreach (var repository in _repositories.Values)
 					{

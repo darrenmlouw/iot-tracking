@@ -6,24 +6,16 @@ using IoTTracking.Core.Entities.Interfaces;
 
 namespace IoTTracking.Application.Services.GenericService
 {
-	public abstract class Service<TEntity, TDto> : IService<TEntity, TDto>
+	public abstract class Service<TEntity, TDto>(
+		IRepository<TEntity> repository,
+		IUnitOfWork unitOfWork,
+		IMapper mapper) : IService<TEntity, TDto>
 	where TEntity : class, IEntity
 	where TDto : class, IEntityDTO
 	{
-		protected readonly IRepository<TEntity> _repository;
-		protected readonly IUnitOfWork _unitOfWork;
-		protected readonly IMapper _mapper;
-
-
-		public Service(
-			IRepository<TEntity> repository,
-			IUnitOfWork unitOfWork,
-			IMapper mapper)
-		{
-			_repository = repository;
-			_unitOfWork = unitOfWork;
-			_mapper = mapper;
-		}
+		protected readonly IRepository<TEntity> _repository = repository;
+		protected readonly IUnitOfWork _unitOfWork = unitOfWork;
+		protected readonly IMapper _mapper = mapper;
 
 		public virtual async Task<TDto> GetById(int id)
 		{
@@ -36,10 +28,10 @@ namespace IoTTracking.Application.Services.GenericService
 			return entities.Select(entity => _mapper.Map<TDto>(entity)).ToList();
 		}
 
-		public virtual async Task<List<TDto>> GetAll()
+		public virtual List<TDto> GetAll()
 		{
 			var entities = _repository.GetAll();
-			List<TEntity> list = entities.ToList();
+			List<TEntity> list = [.. entities];
 			return EntityToDTO(list);
 		}
 
@@ -63,6 +55,7 @@ namespace IoTTracking.Application.Services.GenericService
 		{
 			var entity = await _repository.GetByIdAsync(id) ?? throw new Exception("Entity not found");
 			entity = _repository.SetEntityNoTracking(entity);
+			if (entity == null) throw new Exception("Entity not found");
 			_repository.Delete(entity);
 			await _unitOfWork.SaveChangesAsync();
 		}

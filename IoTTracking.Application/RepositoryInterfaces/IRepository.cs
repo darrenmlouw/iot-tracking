@@ -18,6 +18,6 @@ namespace IoTTracking.Application.RepositoryInterfaces
 
 		void Delete(TEntity entity);
 
-		TEntity SetEntityNoTracking(TEntity entity);
+		TEntity? SetEntityNoTracking(TEntity entity);
 	}
 }

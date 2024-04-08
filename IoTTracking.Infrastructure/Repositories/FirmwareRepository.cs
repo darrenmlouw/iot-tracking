@@ -5,15 +5,8 @@ using System.Linq.Expressions;
 
 namespace IoTTracking.Infrastructure.Repositories
 {
-	public class FirmwareRepository : Repository<Firmware>, IFirmwareRepository
+	public class FirmwareRepository(ApplicationDbContext dbContext) : Repository<Firmware>(dbContext, includes), IFirmwareRepository
 	{
-		private static readonly Expression<Func<Firmware, object>>[] includes =
-		{
-		};
-
-		public FirmwareRepository(ApplicationDbContext dbContext) : base(dbContext, includes)
-		{
-			
-		}
+		private static readonly Expression<Func<Firmware, object>>[] includes = [];
 	}
 }
