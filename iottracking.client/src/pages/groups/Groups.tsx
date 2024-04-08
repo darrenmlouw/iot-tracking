@@ -27,15 +27,36 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
+import useFetch from '@/hooks/useFetch';
+import usePut from '@/hooks/usePut';
+import usePost from '@/hooks/usePost';
+import useDelete from '@/hooks/useDelete';
 
 const Groups = () => {
 	const [groups, setGroups] = useState<Group[]>([]);
-
+	const [originalGroups, refetchGroups] =
+		useFetch<Group[]>('/api/Groups/GetAll');
 	const [editingGroup, setEditingGroup] = useState<Group | null>(null);
+	const _put = usePut<Group>();
+	const _post = usePost<Group>();
+	const _delete = useDelete();
 
 	useEffect(() => {
-		getGroups();
-	}, []);
+		const enhanceGroups = async () => {
+			if (!originalGroups) return;
+
+			const enhancedGroups = await Promise.all(
+				originalGroups.map(async (group) => {
+					const parentGroup = await getGroupById(group.parentGroupId ?? 0);
+
+					return { ...group, parentGroup };
+				})
+			);
+			setGroups(enhancedGroups);
+		};
+
+		enhanceGroups();
+	}, [originalGroups]);
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -46,16 +67,11 @@ const Groups = () => {
 			ParentGroupId: parseInt(formData.get('parentGroupId') as string),
 		};
 
-		const response = await fetch('/api/Groups/Add', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		});
-
-		if (response.ok) {
-			getGroups();
+		const success = await _post('/api/Groups/Add', data);
+		if (success) {
+			refetchGroups();
+		} else {
+			alert('Could not add the group.');
 		}
 	};
 
@@ -68,7 +84,16 @@ const Groups = () => {
 			name: formData.get('nameEdit') as string,
 			parentGroupId: parseInt(formData.get('parentGroupIdEdit') as string),
 		};
-		editGroup(data);
+
+		const success = _put('/api/Groups/Update', data);
+		Promise.resolve(success)
+			.catch(() => {
+				alert('Could not update the group.');
+			})
+			.then(() => {
+				refetchGroups();
+				setEditingGroup(null);
+			});
 	};
 
 	const handleEditOpen = (group: Group) => {
@@ -77,15 +102,17 @@ const Groups = () => {
 
 	const handleDelete = async (id: number) => {
 		if (window.confirm('Are you sure you want to delete this group?')) {
-			const success = await deleteGroup(id);
-			if (success) {
-				getGroups(); // Refresh the list
-			} else {
-				alert('Could not delete the group.');
-			}
+			const success = await _delete(`/api/Groups/Delete/${id}`);
+
+			Promise.resolve(success)
+				.catch(() => {
+					alert('Could not delete the group.');
+				})
+				.then(() => {
+					refetchGroups();
+				});
 		}
 	};
-
 
 	async function getGroupById(id: number) {
 		const response = await fetch(`/api/Groups/Get/${id}`, {
@@ -98,61 +125,13 @@ const Groups = () => {
 		return data;
 	}
 
-	async function getGroups() {
-		const response = await fetch('/api/Groups/GetAll', {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-			},
-		});
-		const data = await response.json();
-
-		const enhancedGroups = await Promise.all(
-			data.map(async (group: Group) => {
-				const parentGroup = await getGroupById(group.parentGroupId!);
-				return { ...group, parentGroup };
-			})
-		);
-
-		setGroups(enhancedGroups);
-	}
-
-	const editGroup = async (groupData: Group) => {
-		const response = await fetch(`/api/Groups/Update`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(groupData),
-		});
-		if (response.ok) {
-			getGroups(); // Refresh the list of devices
-			setEditingGroup(null); // Close the dialog
-		} else {
-			alert('Could not update the group.');
-		}
-	};
-
-	async function deleteGroup(id: number) {
-		const response = await fetch(
-			`/api/Groups/Delete/${id}`,
-			{
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		);
-		return response.ok;
-	}
-
 	return (
 		<>
 			<Dialog
 				open={!!editingGroup}
 				onOpenChange={(open) => {
 					if (!open) {
-						setEditingGroup(null); // Close the dialog by setting editingDevice to null
+						setEditingGroup(null);
 					}
 				}}
 			>

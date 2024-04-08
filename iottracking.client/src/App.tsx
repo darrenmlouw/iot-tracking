@@ -2,9 +2,9 @@ import './App.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import { TopBarProvider } from '@/contexts/TopBarContext';
-import Devices from '@/pages/home/Devices';
+import Devices from '@/pages/devices/Devices';
 import Firmwares from '@/pages/firmware/Firmwares';
-import Groups from '@/pages/group/Groups';
+import Groups from '@/pages/groups/Groups';
 
 function App() {
 	const location = useLocation();

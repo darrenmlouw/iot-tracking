@@ -80,8 +80,8 @@ npm run dev
 ```
 
 ### Swagger Documentation
-There is proxy setup for the frontend to communicate with the backend API. The proxy is configured to use the API server running on `http://localhost:5154`.
-To access the swagger documentation, navigate to `http://localhost:5154/swagger`. or `https://localhost:7253/swagger` for the frontend proxy.
+There is proxy setup for the frontend to communicate with the backend API. The proxy is configured to use the API server running on `http://localhost:5154` or `https://localhost:7253`.
+To access the swagger documentation, navigate to `http://localhost:5154/swagger`. or `https://localhost:7253/swagger`.
 
 ## SQL Scripts
 Create a Database named `IoTTrackingDev` and run the following SQL scripts to create the tables and seed the data.

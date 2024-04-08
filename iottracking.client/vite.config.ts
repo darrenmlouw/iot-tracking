@@ -51,11 +51,6 @@ export default defineConfig({
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
-	// resolve: {
-	// 	alias: {
-	// 		'@': fileURLToPath(new URL('./src', import.meta.url)),
-	// 	},
-	// },
 	server: {
 		proxy: {
 			'^/api': {

@@ -29,19 +29,45 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
+import useFetch from '@/hooks/useFetch';
+import usePost from '@/hooks/usePost';
+import usePut from '@/hooks/usePut';
+import useDelete from '@/hooks/useDelete';
 
 const Devices = () => {
-	const [devices, setDevices] = useState<Device[]>();
-	const [firmware, setFirmware] = useState<Firmware[]>([]);
-	const [groups, setGroups] = useState<Group[]>([]);
-
+	const [devices, setDevices] = useState<Device[]>([]);
+	const [originalDevices, refetchDevices] = useFetch<Device[]>(
+		'/api/Devices/GetAll'
+	);
+	const [firmware] = useFetch<Firmware[]>('/api/Firmware/GetAll');
+	const [groups] = useFetch<Group[]>('/api/Groups/GetAll');
 	const [editingDevice, setEditingDevice] = useState<Device | null>(null);
+	const putDevice = usePut<Device>();
+	const postDevice = usePost<Device>();
+	const deleteDevice = useDelete();
 
 	useEffect(() => {
-		getDevices();
-		getFirmware();
-		getGroups();
-	}, []);
+		const enhanceDevices = async () => {
+			if (!originalDevices) return;
+
+			const enhancedDevices = await Promise.all(
+				originalDevices.map(async (device) => {
+					const firmwaresT = await getFirmwareById(device.firmwareId ?? 0);
+					const groupsT = await getGroupById(device.groupId ?? 0);
+
+					return {
+						...device,
+						firmware: firmwaresT,
+						group: groupsT,
+					};
+				})
+			);
+
+			setDevices(enhancedDevices);
+		};
+
+		enhanceDevices();
+	}, [originalDevices]);
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -53,16 +79,11 @@ const Devices = () => {
 			groupId: parseInt(formData.get('groupId') as string),
 		};
 
-		const response = await fetch('/api/Devices/Add', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		});
-
-		if (response.ok) {
-			getDevices();
+		const success = await postDevice('/api/Devices/Add', data);
+		if (success) {
+			refetchDevices();
+		} else {
+			alert('Could not add the device.');
 		}
 	};
 
@@ -76,7 +97,13 @@ const Devices = () => {
 			firmwareId: parseInt(formData.get('firmwareIdEdit') as string),
 			groupId: parseInt(formData.get('groupIdEdit') as string),
 		};
-		editDevice(data);
+		const success = putDevice('/api/Devices/Update', data);
+		Promise.resolve(success)
+			.catch(() => alert('Could not update the device.'))
+			.then(() => {
+				refetchDevices();
+				setEditingDevice(null);
+			});
 	};
 
 	const handleEditOpen = (device: Device) => {
@@ -85,54 +112,13 @@ const Devices = () => {
 
 	const handleDelete = async (id: number) => {
 		if (window.confirm('Are you sure you want to delete this device?')) {
-			const success = await deleteDevice(id);
-			if (success) {
-				getDevices(); // Refresh the list
-			} else {
-				alert('Could not delete the device.');
-			}
+			const success = await deleteDevice(`/api/Devices/Delete/${id}`);
+
+			Promise.resolve(success)
+				.catch(() => alert('Could not delete the device.'))
+				.then(() => refetchDevices());
 		}
 	};
-
-	async function getDevices() {
-		const response = await fetch('/api/Devices/GetAll', {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-			},
-		});
-		const devices = await response.json();
-
-		// Use Promise.all to wait for all devices to be enhanced with their firmware and group
-		const enhancedDevices = await Promise.all(
-			devices.map(async (device: Device) => {
-				// Get firmware and group details for each device
-				const firmware = await getFirmwareById(device.firmwareId ?? 0);
-				const group = await getGroupById(device.groupId ?? 0);
-
-				// Return a new object representing the enhanced device
-				return {
-					...device,
-					firmware: firmware,
-					group: group,
-				};
-			})
-		);
-
-		setDevices(enhancedDevices);
-	}
-
-	async function getFirmware() {
-		const response = await fetch('/api/Firmware/GetAll', {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-			},
-		});
-
-		const data = await response.json();
-		setFirmware(data);
-	}
 
 	async function getFirmwareById(id: number) {
 		const response = await fetch(`/api/Firmware/Get/${id}`, {
@@ -155,46 +141,6 @@ const Devices = () => {
 		});
 		const data: Group = await response.json();
 		return data;
-	}
-
-	async function getGroups() {
-		const response = await fetch('/api/Groups/GetAll', {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-			},
-		});
-		const data = await response.json();
-		setGroups(data);
-	}
-
-	const editDevice = async (deviceData: Device) => {
-		const response = await fetch(`/api/Devices/Update`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(deviceData),
-		});
-		if (response.ok) {
-			getDevices(); // Refresh the list of devices
-			setEditingDevice(null); // Close the dialog
-		} else {
-			alert('Could not update the device.');
-		}
-	};
-
-	async function deleteDevice(id: number) {
-		const response = await fetch(
-			`/api/Devices/Delete/${id}`,
-			{
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		);
-		return response.ok;
 	}
 
 	return (

@@ -17,15 +17,20 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
+import useFetch from '@/hooks/useFetch';
+import usePut from '@/hooks/usePut';
+import usePost from '@/hooks/usePost';
+import useDelete from '@/hooks/useDelete';
 
 const Firmwares = () => {
 	const [firmware, setFirmware] = useState<Firmware[]>([]);
-
+	const [originalFirmware, refetchFirmware] = useFetch<Firmware[]>(
+		'/api/Firmware/GetAll'
+	);
 	const [editingFirmware, setEditingFirmware] = useState<Firmware | null>(null);
-
-	useEffect(() => {
-		getFirmware();
-	}, []);
+	const _put = usePut<Firmware>();
+	const _post = usePost<Firmware>();
+	const _delete = useDelete();
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -35,30 +40,19 @@ const Firmwares = () => {
 			version: formData.get('version') as string,
 		};
 
-		const response = await fetch('/api/Firmware/Add', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		});
-
-		if (response.ok) {
-			getFirmware();
+		const success = await _post('/api/Firmware/Add', data);
+		if (success) {
+			refetchFirmware();
+		} else {
+			alert('Could not add the firmware.');
 		}
 	};
 
-	async function getFirmware() {
-		const response = await fetch('/api/Firmware/GetAll', {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-			},
-		});
-
-		const data = await response.json();
-		setFirmware(data);
-	}
+	useEffect(() => {
+		if (originalFirmware) {
+			setFirmware(originalFirmware);
+		}
+	}, [originalFirmware]);
 
 	const handleEditSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -68,7 +62,16 @@ const Firmwares = () => {
 			id: editingFirmware?.id,
 			version: formData.get('versionEdit') as string,
 		};
-		editFirmware(data);
+
+		const success = _put('/api/Firmware/Update', data);
+		Promise.resolve(success)
+			.catch(() => {
+				alert('Could not update the firmware.');
+			})
+			.then(() => {
+				refetchFirmware();
+				setEditingFirmware(null);
+			});
 	};
 
 	const handleEditOpen = (firmware: Firmware) => {
@@ -77,41 +80,14 @@ const Firmwares = () => {
 
 	const handleDelete = async (id: number) => {
 		if (window.confirm('Are you sure you want to delete this firmware?')) {
-			const success = await deleteFirmware(id);
-			if (success) {
-				getFirmware(); // Refresh the list
-			} else {
-				alert('Could not delete the firmware.');
-			}
-		}
-	};
-
-	async function deleteFirmware(id: number) {
-		const response = await fetch(
-			`/api/Firmware/Delete/${id}`,
-			{
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		);
-		return response.ok;
-	}
-
-	const editFirmware = async (firmwareData: Firmware) => {
-		const response = await fetch(`/api/Firmware/Update`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(firmwareData),
-		});
-		if (response.ok) {
-			getFirmware();
-			setEditingFirmware(null);
-		} else {
-			alert('Could not update the firmware.');
+			const success = await _delete(`/api/Firmware/Delete/${id}`);
+			Promise.resolve(success)
+				.catch(() => {
+					alert('Could not delete the firmware.');
+				})
+				.then(() => {
+					refetchFirmware();
+				});
 		}
 	};
 
