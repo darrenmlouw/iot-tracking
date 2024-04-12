@@ -2,7 +2,7 @@ import logo from '@/assets/logo.png';
 
 const Home = () => {
 	return (
-		<div className="flex flex-col sm:items-center sm:justify-start flex-col md:items-start w-full h-full sm:pt-5 md:pt-10 lg:pt-20 lg:flex-row">
+		<div className="flex flex-col lg:flex-row sm:items-center sm:justify-start md:items-start w-full h-full sm:pt-5 md:pt-10 lg:pt-20 ">
 			<div className="flex w-full lg:h-full justify-center items-start mb-6 lg:mb-0 p-10">
 				<div className="flex rounded-xl p-2 relative">
 					<div
@@ -21,10 +21,10 @@ const Home = () => {
 			</div>
 
 			<div className="flex flex-col space-y-4 lg:w-full lg:h-full items-center lg:items-start p-5 md:p-10 lg:p-10">
-				<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-foreground text-center lg:text-left">
+				<h1 className="text-5xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-foreground text-center lg:text-left">
 					OptiMIM
 				</h1>
-				<p className="text-2xl md:text-3xl lg:text-4xl font-semibold text-secondary-foreground text-center lg:text-left">
+				<p className="text-3xl md:text-4xl lg:text-5xl font-semibold text-secondary-foreground text-center lg:text-left">
 					Fueling the Future of Industry
 				</p>
 				<p className="text-lg md:text-xl text-muted text-center lg:text-left">

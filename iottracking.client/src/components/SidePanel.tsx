@@ -8,6 +8,7 @@ import {
   CounterClockwiseClockIcon,
 } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
+import SidePanelState from '../enums/SidePanelState';
 
 function SidePanel() {
   const location = useLocation();
@@ -22,7 +23,7 @@ function SidePanel() {
   );
 
   return (
-    <div className={`transition-all ease-in-out duration-300 flex flex-col p-4 space-y-2 items-center ${sidePanelState === "expanded" ? "w-40" : sidePanelState === "condensed" ? "w-20" : "hidden"} bg-card rounded-tr-xl rounded-br-lg`}>
+    <div className={`transition-all ease-in-out duration-300 flex flex-col p-4 space-y-2 items-center ${sidePanelState === "expanded" ? "w-56" : sidePanelState === "condensed" ? "w-20" : "hidden"} bg-card rounded-tr-xl rounded-br-lg`}>
       <div className='m-2'>
         <img src={logo} alt="Logo" className="mb-4 max-w-[36px]" />
       </div>
@@ -36,7 +37,7 @@ function SidePanel() {
           <Button
             variant={location.pathname === to ? "default" : "ghost"}
             size={sidePanelState === "expanded" ? "default" : "icon"}
-            className="rounded-lg w-full"
+            className={`rounded-lg w-full overflow-hidden ${sidePanelState === SidePanelState.Expanded ? 'justify-start' : 'justify-center'}`}
           >
             {renderButtonContent(Icon, text)}
           </Button>

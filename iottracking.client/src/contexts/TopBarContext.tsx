@@ -6,12 +6,7 @@ import {
 	useEffect,
 } from 'react';
 import useDarkMode from '@/hooks/useDarkMode'; // Ensure this path matches your file structure
-
-enum SidePanelState {
-	Closed = 'closed',
-	Condensed = 'condensed',
-	Expanded = 'expanded',
-}
+import SidePanelState from '@/enums/SidePanelState';
 
 type TopBarContextType = {
 	theme: 'light' | 'dark';
