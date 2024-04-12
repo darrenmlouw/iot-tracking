@@ -1,29 +1,42 @@
 import { Button } from '@/components/ui/button';
 import { useTopBar } from '@/contexts/TopBarContext';
-import { SunIcon } from '@radix-ui/react-icons';
+import { HamburgerMenuIcon, SunIcon } from '@radix-ui/react-icons';
 import { MoonIcon } from 'lucide-react';
-
+import { useEffect } from 'react';
 
 const TopBar = () => {
-	const { theme, toggleTheme } = useTopBar();
+  const { theme, toggleTheme } = useTopBar();
+	const { sidePanelState, toggleSidePanel } = useTopBar();
 
-	return (
-		// create a top bar with a light an ddark mode toggle on the top-right side of the screen
-		<div className="flex flex-row space-x-2 w-ful pt-2 pr-2 pl-2 justify-end">
-			<Button
-				size="icon"
-				variant="ghost"
-				onClick={toggleTheme}
-				className="rounded-full"
-			>
-				{theme === 'dark' ? (
-					<SunIcon className="h-5 w-5" />
-				) : (
-					<MoonIcon className="h-5 w-5" />
-				)}
-			</Button>
-		</div>
-	);
+	useEffect(() => {
+		console.log(sidePanelState)
+	}, [sidePanelState])
+
+  return (
+    // Positioned absolutely at the top of its closest positioned ancestor
+    <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-2 h-[var(--topbar-height)]">
+      <Button
+        size="icon"
+        variant="ghost"
+        onClick={toggleSidePanel}
+        className="rounded-full"
+      >
+        <HamburgerMenuIcon className="h-5 w-5" />
+      </Button>
+      <Button
+        size="icon"
+        variant="ghost"
+        onClick={toggleTheme}
+        className="rounded-full"
+      >
+        {theme === 'dark' ? (
+          <SunIcon className="h-5 w-5" />
+        ) : (
+          <MoonIcon className="h-5 w-5" />
+        )}
+      </Button>
+    </div>
+  );
 };
 
 export default TopBar;

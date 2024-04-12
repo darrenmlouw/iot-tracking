@@ -138,7 +138,7 @@ const Firmwares = () => {
 				</DialogContent>
 			</Dialog>
 
-			<div className="space-y-2 p-2">
+			<div className="space-y-2 p-2 w-full">
 				<h1 className="text-2xl sticky top-0 bg-background">Version</h1>
 				<form onSubmit={handleSubmit} className="space-y-2">
 					<Input

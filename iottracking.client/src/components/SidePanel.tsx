@@ -1,37 +1,49 @@
-import { Button } from '@/components/ui/button';
-import {
-	MobileIcon,
-	LayersIcon,
-	CounterClockwiseClockIcon,
-} from '@radix-ui/react-icons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useTopBar } from '@/contexts/TopBarContext';
 import logo from '../../src/assets/Digital_Matter_Logo.png';
+import {
+  HomeIcon,
+  MobileIcon,
+  LayersIcon,
+  CounterClockwiseClockIcon,
+} from '@radix-ui/react-icons';
+import { Button } from '@/components/ui/button';
 
 function SidePanel() {
-	return (
-		<div className="flex flex-col bg-card p-2 space-y-2 rounded-tr-[4] rounded-br-[4] rounded-r-2xl items-center">
-			<div className='m-2'>
-				<img src={logo} alt="Logo" className="mb-4 max-w-[36px]" />
-			</div>
-			<Link to="/Devices">
-				<Button variant="ghost" size="icon" className="rounded">
-					<MobileIcon className="h-6 w-6" />
-				</Button>
-			</Link>
+  const location = useLocation();
+  const { sidePanelState } = useTopBar();
 
-			<Link to="/Firmware">
-				<Button variant="ghost" size="icon" className="rounded">
-					<LayersIcon className="h-6 w-6" />
-				</Button>
-			</Link>
+  // Helper to render button content conditionally
+  const renderButtonContent = (IconComponent : React.ElementType, text: string) => (
+    <>
+      <IconComponent className={`${sidePanelState === "expanded" ? "mr-2" : ""} h-6 w-6`} />
+      {sidePanelState === "expanded" && text}
+    </>
+  );
 
-			<Link to="/Groups">
-				<Button variant="ghost" size="icon" className="rounded">
-					<CounterClockwiseClockIcon className="h-6 w-6" />
-				</Button>
-			</Link>
-		</div>
-	);
+  return (
+    <div className={`transition-all ease-in-out duration-300 flex flex-col p-4 space-y-2 items-center ${sidePanelState === "expanded" ? "w-40" : sidePanelState === "condensed" ? "w-20" : "hidden"} bg-card rounded-tr-xl rounded-br-lg`}>
+      <div className='m-2'>
+        <img src={logo} alt="Logo" className="mb-4 max-w-[36px]" />
+      </div>
+      {[
+        { to: "/Home", icon: HomeIcon, text: "Home" },
+        { to: "/Devices", icon: MobileIcon, text: "Devices" },
+        { to: "/Firmware", icon: LayersIcon, text: "Firmware" },
+        { to: "/Groups", icon: CounterClockwiseClockIcon, text: "Groups" },
+      ].map(({ to, icon: Icon, text }) => (
+        <Link to={to} key={text} className='w-full'>
+          <Button
+            variant={location.pathname === to ? "default" : "ghost"}
+            size={sidePanelState === "expanded" ? "default" : "icon"}
+            className="rounded-lg w-full"
+          >
+            {renderButtonContent(Icon, text)}
+          </Button>
+        </Link>
+      ))}
+    </div>
+  );
 }
 
 export default SidePanel;

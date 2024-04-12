@@ -19,8 +19,8 @@
     --secondary: 120 30% 90%;
     --secondary-foreground: 120 30% 20%;
 
-    --muted: 30 20% 80%;
-    --muted-foreground: 30 25% 20%;
+		--muted: 210 10% 70%;
+    --muted-foreground: 210 10% 50%;
 
     --accent: 340 30% 90%;
     --accent-foreground: 340 30% 20%;
@@ -51,10 +51,10 @@
     --secondary: 120 30% 40%;
     --secondary-foreground: 120 10% 90%;
 
-    --muted: 30 20% 50%;
-    --muted-foreground: 30 10% 90%;
+    --muted: 210 10% 60%;
+    --muted-foreground: 210 10% 60%;
 
-    --accent: 340 30% 40%;
+    --accent: 217 91% 60%;
     --accent-foreground: 340 10% 90%;
 
     --destructive: 0 45% 45%;
@@ -76,7 +76,9 @@ body,
 	font-family: 'Open Sans', sans-serif;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
-
+	--logo-home-hero-image-background-image: linear-gradient(-45deg, #bd34fe 50%, #acacca 50%);
+  --logo-home-hero-image-filter: blur(40px);
+	--topbar-height: 3.5rem;
 }
 
 @layer base {

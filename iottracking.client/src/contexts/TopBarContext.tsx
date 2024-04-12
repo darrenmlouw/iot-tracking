@@ -1,9 +1,23 @@
-import { createContext, useContext, ReactNode } from 'react';
+import {
+	createContext,
+	useContext,
+	ReactNode,
+	useState,
+	useEffect,
+} from 'react';
 import useDarkMode from '@/hooks/useDarkMode'; // Ensure this path matches your file structure
+
+enum SidePanelState {
+	Closed = 'closed',
+	Condensed = 'condensed',
+	Expanded = 'expanded',
+}
 
 type TopBarContextType = {
 	theme: 'light' | 'dark';
 	toggleTheme: () => void;
+	sidePanelState: SidePanelState;
+	toggleSidePanel: () => void;
 };
 
 const TopBarContext = createContext<TopBarContextType | undefined>(undefined);
@@ -14,9 +28,39 @@ interface TopBarProviderProps {
 
 export const TopBarProvider = ({ children }: TopBarProviderProps) => {
 	const [theme, toggleTheme] = useDarkMode();
+	const [sidePanelState, setSidePanelState] = useState<SidePanelState>(
+		SidePanelState.Condensed
+	);
+	const mqSmall = window.matchMedia('(max-width: 767px)');
+
+	useEffect(() => {
+		
+    const handleResize = () => {
+      // Automatically set to closed on small screens, and condensed on larger screens.
+      setSidePanelState(mqSmall.matches ? SidePanelState.Closed : SidePanelState.Condensed);
+    };
+
+    handleResize(); // Initial check
+    mqSmall.addEventListener('change', handleResize);
+    return () => mqSmall.removeEventListener('change', handleResize);
+  }, []);
+
+  const toggleSidePanel = () => {
+    setSidePanelState(prevState => {
+      // If it's small screen, keep it closed or allow opening if not already expanded.
+      if (mqSmall.matches) {
+        return prevState === SidePanelState.Expanded ? SidePanelState.Closed : SidePanelState.Expanded;
+      } else {
+        // Toggle between condensed and expanded on larger screens.
+        return prevState === SidePanelState.Expanded ? SidePanelState.Condensed : SidePanelState.Expanded;
+      }
+    });
+  };
 
 	return (
-		<TopBarContext.Provider value={{ theme, toggleTheme }}>
+		<TopBarContext.Provider
+			value={{ theme, toggleTheme, sidePanelState, toggleSidePanel }}
+		>
 			{children}
 		</TopBarContext.Provider>
 	);
